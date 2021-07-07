@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(LcdEmulator LANGUAGES CXX)
+project(Lcd1602Emulator LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -35,26 +35,26 @@ set(PROJECT_SOURCES
         LcdLib/Inc/pin.h
         LcdLib/Inc/lcd.h
         LcdLib/Inc/QCell.h
-        LcdLib/Src/pin.c
-        LcdLib/Src/lcd.c
+        LcdLib/Src/pin.cpp
+        LcdLib/Src/lcd.cpp
         LcdLib/Src/QCell.cpp
 
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(LcdEmulator
+    qt_add_executable(Lcd1602Emulator
         ${PROJECT_SOURCES}
     )
 else()
     if(ANDROID)
-        add_library(LcdEmulator SHARED
+        add_library(Lcd1602Emulator SHARED
             ${PROJECT_SOURCES}
         )
     else()
-        add_executable(LcdEmulator
+        add_executable(Lcd1602Emulator
             ${PROJECT_SOURCES}
         )
     endif()
 endif()
 
-target_link_libraries(LcdEmulator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Lcd1602Emulator PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)

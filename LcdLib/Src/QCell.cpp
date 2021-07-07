@@ -22,9 +22,10 @@ void QCell::SetSymbol(char chSymbolNew)
     m_chSymbol = chSymbolNew;
 }
 
-void QCell::ActivateCursor(bool bIsCursorNew)
+void QCell::ActivateCursor()
 {
-    m_bIsCursor = bIsCursorNew;
+    m_bIsCursor = true;
+    this->setStyleSheet("background-color: red");
 }
 
 int QCell::GetAddr()
@@ -42,3 +43,13 @@ bool QCell::IsCursorOn()
     return m_bIsCursor;
 }
 
+void QCell::Update()
+{
+    this->setText(QChar(m_chSymbol));
+}
+
+void QCell::CursorOff()
+{
+    this->setStyleSheet("background-color: white");
+    m_bIsCursor = false;
+}

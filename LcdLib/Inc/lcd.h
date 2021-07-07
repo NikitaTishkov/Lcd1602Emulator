@@ -50,6 +50,7 @@ struct lcd{
     bool bIsSingleRow;
     QGridLayout *QSymbols;
     QCell **aCells;
+    int iCursorAddr;
 #endif
 
 };
@@ -119,7 +120,7 @@ void lcd_init(Lcd *lcd);
 
 /*
  *	lcd command for shifting cursor on one symbol
- */
+ *///TODO
 void lcd_cmd_shift(Lcd *lcd, bool is_display_shift, bool is_right);
 
 /*
@@ -133,8 +134,37 @@ void lcd_cmd_clear(Lcd *lcd);
  */
 uint8_t lcd_latin_charmap(char ch);
 
+/*
+ * Return curor to the start position
+ * (0x00)
+ */
+void lcd_cmd_rethome(Lcd *lcd);
+
+/*
+ * Write character to the cursor position
+ */
 void lcd_putchar(Lcd *lcd, char ch);
 
+/*
+ * Write string from the current cursor position
+ */
 void lcd_putstring(Lcd *lcd, char* str);
 
+/*
+ * EMULATOR ONLY
+ */
+#if (USE_EMULATOR)
+void lcd_update(Lcd *lcd);
+#endif
+
+/*
+ * EMULATOR ONLY
+ */
+#if (USE_EMULATOR)
+void lcd_shift_raw_left(Lcd *lcd, bool is_second_raw);
+void lcd_shift_raw_right(Lcd *lcd, bool is_second_raw);
+void lcd_set_cursor_by_addr(Lcd *lcd, int iCursorAddrNew);
+void lcd_set_symbol_by_addr(Lcd *lcd, int iAddr, char chSymbol);
+void lcd_shift_cursor(Lcd *lcd);
+#endif
 #endif /* INC_LCD_H_ */

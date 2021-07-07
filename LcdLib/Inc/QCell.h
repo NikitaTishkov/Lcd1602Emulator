@@ -2,7 +2,7 @@
 #define QCELL_H
 #include <QPushButton>
 
-class QCell : QPushButton
+class QCell : public QPushButton
 {
 private:
     int m_iAddr;
@@ -15,11 +15,14 @@ public:
 
     void SetAddr(int iAddrNew);
     void SetSymbol(char chSymbolNew);
-    void ActivateCursor(bool bIsCursorNew);
+
 
     int GetAddr();
     char GetSymbol();
     bool IsCursorOn();
 
+    void Update();
+    void ActivateCursor();
+    void CursorOff();
 };
 #endif // QCELL_H

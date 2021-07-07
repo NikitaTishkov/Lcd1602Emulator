@@ -5,77 +5,91 @@
  *      Author: tns
  */
 #include "LcdLib/Inc/lcd.h"
+
+void lcd_delay_us(Lcd *lcd, uint16_t usec)
+{
 #if (!USE_EMULATOR)
-    void lcd_delay_us(Lcd *lcd, uint16_t usec)
-    {
-        lcd->func_delay_us(usec);
-    }
-
-    void lcd_delay_ms(Lcd *lcd, uint16_t msec)
-    {
-        lcd->func_delay_ms(msec);
-    }
-
-    void lcd_set_halfbyte(Lcd *lcd, uint8_t half)
-    {
-        gpio_clear(&lcd->e_pin);
-
-        uint8_t bit;
-        for (uint8_t i = 0; i < 4; i++)
-        {
-            bit = half & (1 << i);
-            if(bit >= 1)
-            {
-                HAL_GPIO_WritePin(lcd->data_pins[i].port, lcd->data_pins[i].pin, 1);
-            }
-            else
-            {
-                HAL_GPIO_WritePin(lcd->data_pins[i].port, lcd->data_pins[i].pin, 0);
-            }
-
-        }
-        lcd_delay_us(lcd, DELAY_ENA_STROBE_US);
-        gpio_set(&lcd->e_pin);
-        lcd_delay_us(lcd, DELAY_ENA_STROBE_US);
-        gpio_clear(&lcd->e_pin);
-        lcd_delay_us(lcd, DELAY_ENA_STROBE_US);
-
-    }
-
-    void lcd_set_rsrw(Lcd *lcd, uint8_t rs, uint8_t rw)
-    {
-        gpio_write(&lcd->rs_pin, rs);
-
-        gpio_write(&lcd->rw_pin, rw);
-
-    }
-
-    void lcd_data_set_byte(Lcd *lcd, uint8_t byte)
-    {
-        lcd_set_halfbyte(lcd, byte >> 4);
-        //lcd_delay_us(lcd, DELAY_CONTROL_US/10);
-        lcd_set_halfbyte(lcd, byte & 0x0F);
-    }
-
-    void lcd_data_set_byte_with_delay(Lcd *lcd, uint8_t byte, uint16_t delay)
-    {
-        lcd_set_halfbyte(lcd, byte >> 4);
-        lcd_delay_us(lcd, delay);
-        lcd_set_halfbyte(lcd, byte & 0x0F);
-    }
-
-    void lcd_send_byte(Lcd *lcd, uint8_t rs, uint8_t rw, uint8_t byte)
-    {
-        lcd_set_rsrw(lcd, rs, rw);
-        lcd_data_set_byte(lcd, byte);
-    }
-
-    void lcd_send_byte_with_delay(Lcd *lcd, uint8_t rs, uint8_t rw, uint8_t byte, uint16_t delay)
-    {
-        lcd_set_rsrw(lcd, rs, rw);
-        lcd_data_set_byte_with_delay(lcd, byte, delay);
-    }
+    lcd->func_delay_us(usec);
 #endif
+}
+
+void lcd_delay_ms(Lcd *lcd, uint16_t msec)
+{
+#if (!USE_EMULATOR)
+    lcd->func_delay_ms(msec);
+#endif
+}
+
+void lcd_set_halfbyte(Lcd *lcd, uint8_t half)
+{
+#if (!USE_EMULATOR)
+    gpio_clear(&lcd->e_pin);
+
+    uint8_t bit;
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        bit = half & (1 << i);
+        if(bit >= 1)
+        {
+            HAL_GPIO_WritePin(lcd->data_pins[i].port, lcd->data_pins[i].pin, 1);
+        }
+        else
+        {
+            HAL_GPIO_WritePin(lcd->data_pins[i].port, lcd->data_pins[i].pin, 0);
+        }
+
+    }
+    lcd_delay_us(lcd, DELAY_ENA_STROBE_US);
+    gpio_set(&lcd->e_pin);
+    lcd_delay_us(lcd, DELAY_ENA_STROBE_US);
+    gpio_clear(&lcd->e_pin);
+    lcd_delay_us(lcd, DELAY_ENA_STROBE_US);
+#endif
+}
+
+void lcd_set_rsrw(Lcd *lcd, uint8_t rs, uint8_t rw)
+{
+#if (!USE_EMULATOR)
+    gpio_write(&lcd->rs_pin, rs);
+
+    gpio_write(&lcd->rw_pin, rw);
+#endif
+}
+
+void lcd_data_set_byte(Lcd *lcd, uint8_t byte)
+{
+#if (!USE_EMULATOR)
+    lcd_set_halfbyte(lcd, byte >> 4);
+    //lcd_delay_us(lcd, DELAY_CONTROL_US/10);
+    lcd_set_halfbyte(lcd, byte & 0x0F);
+#endif
+}
+
+void lcd_data_set_byte_with_delay(Lcd *lcd, uint8_t byte, uint16_t delay)
+{
+#if (!USE_EMULATOR)
+    lcd_set_halfbyte(lcd, byte >> 4);
+    lcd_delay_us(lcd, delay);
+    lcd_set_halfbyte(lcd, byte & 0x0F);
+#endif
+}
+
+void lcd_send_byte(Lcd *lcd, uint8_t rs, uint8_t rw, uint8_t byte)
+{
+#if (!USE_EMULATOR)
+    lcd_set_rsrw(lcd, rs, rw);
+    lcd_data_set_byte(lcd, byte);
+#endif
+}
+
+void lcd_send_byte_with_delay(Lcd *lcd, uint8_t rs, uint8_t rw, uint8_t byte, uint16_t delay)
+{
+#if (!USE_EMULATOR)
+    lcd_set_rsrw(lcd, rs, rw);
+    lcd_data_set_byte_with_delay(lcd, byte, delay);
+#endif
+}
+
 void lcd_init(Lcd *lcd)
 {
 #if (!USE_EMULATOR)
@@ -105,27 +119,98 @@ void lcd_init(Lcd *lcd)
 	lcd_data_set_byte(lcd, 0b00000110);
 	lcd_delay_us(lcd, DELAY_CONTROL_US);
 #else
-    if(lcd->bIsSingleRow)
+
+    lcd->aCells = new QCell*[2];
+    lcd->aCells[0] = new QCell[16];
+    for(int i = 0; i < 16; i++)
     {
-        lcd->aCells[0] = new QCell[16];
+        lcd->QSymbols->addWidget(&lcd->aCells[0][i], 0, i);
+        lcd->aCells[0][i].SetAddr(0x00 + i);
+    }
+
+    if(!lcd->bIsSingleRow)
+    {
+        lcd->aCells[1] = new QCell[16];
         for(int i = 0; i < 16; i++)
         {
-            lcd->QS
+            lcd->QSymbols->addWidget(&lcd->aCells[1][i], 1, i);
+            lcd->aCells[1][i].SetAddr(0x40 + i);
         }
     }
+
+    lcd_update(lcd);
 #endif
 }
 
-
 void lcd_cmd_clear(Lcd *lcd)
 {
+#if (!USE_EMULATOR)
 	lcd_set_rsrw(lcd, 0, 0);
 	lcd_data_set_byte(lcd, 0b00000001);
 	lcd_delay_us(lcd, DELAY_CLRRET_US);
+#else
+    for(int i = 0; i < 16; i++)
+        lcd->aCells[0][i].SetSymbol(' ');
+    if(!lcd->bIsSingleRow)
+    {
+        for(int i = 0; i < 16; i++)
+            lcd->aCells[1][i].SetSymbol(' ');
+    }
+    lcd_update(lcd);
+#endif
 }
+
+#if (USE_EMULATOR)
+void lcd_shift_raw_right(Lcd *lcd, bool is_second_raw)
+{
+    int raw_num = 0;
+    if(is_second_raw)
+        raw_num = 1;
+    for(int i = 14; i >= 0; i--)
+    {
+        lcd->aCells[raw_num][i + 1].SetSymbol(lcd->aCells[raw_num][i].GetSymbol());
+    }
+    lcd->aCells[raw_num][0].SetSymbol(' ');
+    lcd_update(lcd);
+}
+#endif
+
+#if (USE_EMULATOR)
+void lcd_shift_raw_left(Lcd *lcd, bool is_second_raw)
+{
+    int raw_num = 0;
+    if(is_second_raw)
+        raw_num = 1;
+    for(int i = 0; i < 14; i++)
+    {
+        lcd->aCells[raw_num][i].SetSymbol(lcd->aCells[raw_num][i + 1].GetSymbol());
+    }
+    lcd->aCells[raw_num][15].SetSymbol(' ');
+    lcd_update(lcd);
+}
+#endif
+
+#if (USE_EMULATOR)
+void lcd_shift_cursor(Lcd *lcd)
+{
+    if(lcd->iCursorAddr == 0x0F)
+    {
+        lcd_set_cursor_by_addr(lcd, 0x00);
+    }
+    else if(lcd->iCursorAddr == 0x4F)
+    {
+        lcd_set_cursor_by_addr(lcd, 0x40);
+    }
+    else
+    {
+        lcd_set_cursor_by_addr(lcd, lcd->iCursorAddr + 1);
+    }
+}
+#endif
 
 void lcd_cmd_shift(Lcd *lcd, bool is_display_shift, bool is_right)
 {
+#if (!USE_EMULATOR)
 	uint8_t cmd_byte = 0b00010000;
 	if(is_display_shift)
 		cmd_byte = cmd_byte | 0b00001000;
@@ -135,32 +220,68 @@ void lcd_cmd_shift(Lcd *lcd, bool is_display_shift, bool is_right)
 
 	lcd_send_byte_with_delay(lcd, 0, 0, cmd_byte, 39);
 	lcd_delay_us(lcd, DELAY_CONTROL_US);
+#else
+    if(is_display_shift)
+    {
+        for(int j = 0; j < 2; j++)
+        {
+            if(is_right)
+            {
+                lcd_shift_raw_right(lcd, j);
+            }
+            else
+            {
+                lcd_shift_raw_left(lcd, j);
+            }
+            if(lcd->bIsSingleRow)
+            {
+                break;
+            }
+        }
+    }
+    else
+    {
+        lcd_shift_cursor(lcd);
+    }
+#endif
 }
 
 void lcd_cmd_set_addr(Lcd *lcd, uint8_t addr)
 {
+#if (!USE_EMULATOR)
 	if( (addr >= 0x00 && addr <= 0x0F) || (addr >= 0x40 && addr <= 0x4F) )
 	{
 		addr |= 0b10000000;
 		lcd_send_byte_with_delay(lcd, 0, 0, addr, 39);
 		lcd_delay_us(lcd, DELAY_CONTROL_US);
 	}
+#endif
 }
 
 void lcd_cmd_rethome(Lcd *lcd)
 {
+#if (!USE_EMULATOR)
 	lcd_send_byte_with_delay(lcd, 0, 0, 0b00000010, 39);
 	lcd_delay_us(lcd, DELAY_CLRRET_US);
+#else
+    lcd_set_cursor_by_addr(lcd, 0x00);
+#endif
 }
 
 void lcd_putchar(Lcd *lcd, char ch)
 {
+#if (!USE_EMULATOR)
 	lcd_send_byte_with_delay(lcd, 1, 0, lcd_latin_charmap(ch), 39);
 	lcd_delay_us(lcd, DELAY_CONTROL_US);
+#else
+    lcd_set_symbol_by_addr(lcd, lcd->iCursorAddr, ch);
+    lcd_shift_cursor(lcd);
+#endif
 }
 
 void lcd_putstring(Lcd *lcd, char* str) // dummy example
 {
+
 	char *ptr = str;
 	while(*ptr != '\0')
 	{
@@ -467,3 +588,70 @@ uint8_t lcd_latin_charmap(char ch)
 		break;
 	}
 }
+
+#if (USE_EMULATOR)
+void lcd_update(Lcd *lcd)
+{
+    for(int i = 0; i < 16; i++)
+        lcd->aCells[0][i].Update();
+
+    if(!lcd->bIsSingleRow)
+    {
+        for(int i = 0; i < 16; i++)
+        {
+            lcd->aCells[1][i].Update();
+        }
+    }
+}
+#endif
+
+#if (USE_EMULATOR)
+void lcd_set_cursor_by_addr(Lcd *lcd, int iCursorAddrNew)
+{
+    for(int j = 0; j < 2; j++)
+    {
+        for(int i = 0; i < 16; i++)
+        {
+            if(lcd->bIsSingleRow && j == 1)
+                break;
+            if(lcd->aCells[j][i].GetAddr() == lcd->iCursorAddr)
+            {
+                lcd->aCells[j][i].CursorOff();
+            }
+        }
+    }
+
+    for(int j = 0; j < 2; j++)
+    {
+        for(int i = 0; i < 16; i++)
+        {
+            if(lcd->bIsSingleRow && j == 1)
+                break;
+            if(lcd->aCells[j][i].GetAddr() == iCursorAddrNew)
+            {
+                lcd->aCells[j][i].ActivateCursor();
+                lcd->iCursorAddr = iCursorAddrNew;
+            }
+        }
+    }
+}
+#endif
+
+#if (USE_EMULATOR)
+void lcd_set_symbol_by_addr(Lcd *lcd, int iAddr, char chSymbol)
+{
+    for(int j = 0; j < 2; j++)
+    {
+        for(int i = 0; i < 16; i++)
+        {
+            if(lcd->aCells[j][i].GetAddr() == iAddr)
+            {
+                lcd->aCells[j][i].SetSymbol(chSymbol);
+            }
+        }
+        if(lcd->bIsSingleRow)
+            break;
+    }
+    lcd_update(lcd);
+}
+#endif
