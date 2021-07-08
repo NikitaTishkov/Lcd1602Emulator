@@ -9,7 +9,7 @@
 #define INC_LCD_H_
 #include <stdint.h>
 #include <stdbool.h>
-#include <LcdLib/Inc/pin.h>
+#include "LcdLib/Inc/pin.h"
 // Emulator includes
 #if USE_EMULATOR
     #include <QGridLayout>

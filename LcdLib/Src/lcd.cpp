@@ -298,8 +298,6 @@ void lcd_putstring(Lcd *lcd, char* str) // dummy example
 	}
 }
 
-
-
 uint8_t lcd_latin_charmap(char ch)
 {
 	switch(ch)
