@@ -120,7 +120,7 @@ void lcd_init(Lcd *lcd);
 
 /*
  *	lcd command for shifting cursor on one symbol
- *///TODO
+ */
 void lcd_cmd_shift(Lcd *lcd, bool is_display_shift, bool is_right);
 
 /*

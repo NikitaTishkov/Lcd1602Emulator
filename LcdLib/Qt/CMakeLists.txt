@@ -38,7 +38,8 @@ set(PROJECT_SOURCES
         LcdLib/Src/pin.cpp
         LcdLib/Src/lcd.cpp
         LcdLib/Src/QCell.cpp
-
+        LcdLib/Src/mainfunction.cpp
+        LcdLib/Inc/mainfunction.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

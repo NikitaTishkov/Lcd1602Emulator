@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "LcdLib/Inc/lcd.h"
 #include "LcdLib/Inc/QCell.h"
+#include "LcdLib/Inc/mainfunction.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,7 +16,7 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    void WorkCycle();
+    void MainCycle();
     QCell **m_aCells;
     ~MainWindow();
 

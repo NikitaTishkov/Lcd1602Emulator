@@ -11,20 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 }
 
-void MainWindow::WorkCycle()
+void MainWindow::MainCycle()
 {
-    lcd_set_cursor_by_addr(lcd, 0x00);
-    lcd_putstring(lcd, "Hello");
-
-    /* User code 0 END*/
-
-    //while(1)
-    //{
-        /* User code 1 BEGIN */
-
-        /* User code 1 END */
-    //}
-
+    WorkCycle(lcd);
 }
 
 MainWindow::~MainWindow()
@@ -37,7 +26,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_startButton_clicked()
 {
-    this->WorkCycle();
+    this->MainCycle();
 }
 
 void MainWindow::on_initButton_clicked()
