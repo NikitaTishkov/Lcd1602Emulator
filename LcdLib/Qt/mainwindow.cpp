@@ -1,7 +1,18 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "unistd.h"
+#ifndef __cplusplus
+
+extern "C"
+{
+#endif
+    #include "mainfunction.h"
+    void WorkCycle(Lcd *lcd);
+#ifndef __cplusplus
+}
+#endif
 #define USE_EMULATOR 1
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -13,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::MainCycle()
 {
-    WorkCycle(lcd);
 }
 
 MainWindow::~MainWindow()
@@ -21,12 +31,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
-
+Lcd* MainWindow::GetLcd()
+{
+    return lcd;
+}
 
 void MainWindow::on_startButton_clicked()
 {
-    this->MainCycle();
+    WorkCycle(lcd);
 }
 
 void MainWindow::on_initButton_clicked()

@@ -13,7 +13,7 @@ then
     cat Src/pin.cpp > LcdLib_qt/LcdLib/Src/pin.cpp
     cat Src/QCell.cpp > LcdLib_qt/LcdLib/Src/QCell.cpp
     cat Src/lcd.cpp > LcdLib_qt/LcdLib/Src/lcd.cpp
-    cat Src/mainfunction.cpp > LcdLib_qt/LcdLib/Src/mainfunction.cpp
+    cat Src/mainfunction.c > LcdLib_qt/LcdLib/Src/mainfunction.c
     cat Qt/main.cpp > LcdLib_qt/main.cpp
     cat Qt/mainwindow.h > LcdLib_qt/mainwindow.h
     cat Qt/mainwindow.cpp > LcdLib_qt/mainwindow.cpp
@@ -27,7 +27,7 @@ then
     sed 's!#include "LcdLib/Inc/pin.h"!#include "pin.h"!g' Src/pin.cpp > LcdLib_1602/pin.c
     sed 's!#include "LcdLib/Inc/lcd.h"!#include "lcd.h"!g' Src/lcd.cpp > LcdLib_1602/lcd.c
     sed 's!#include "LcdLib/Inc/lcd.h"!#include "lcd.h"!g' Inc/mainfunction.h > LcdLib_1602/mainfunction.h
-    sed 's!#include "LcdLib/Inc/mainfunction.h"!#include "mainfunction.h"!g' Src/mainfunction.cpp > LcdLib_1602/mainfunction.c
+    sed 's!#include "LcdLib/Inc/mainfunction.h"!#include "mainfunction.h"!g' Src/mainfunction.c > LcdLib_1602/mainfunction.c
 else
     echo "Wrong arguments configure.sh [Qt or Lcd]"
 fi

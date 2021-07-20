@@ -32,14 +32,12 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        LcdLib/Inc/pin.h
-        LcdLib/Inc/lcd.h
-        LcdLib/Inc/QCell.h
-        LcdLib/Src/pin.cpp
-        LcdLib/Src/lcd.cpp
-        LcdLib/Src/QCell.cpp
-        LcdLib/Src/mainfunction.cpp
-        LcdLib/Inc/mainfunction.h
+        lcd.h
+        QCell.h
+        lcd.cpp
+        QCell.cpp
+        mainfunction.c
+        mainfunction.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

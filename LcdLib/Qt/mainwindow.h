@@ -2,9 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "LcdLib/Inc/lcd.h"
-#include "LcdLib/Inc/QCell.h"
-#include "LcdLib/Inc/mainfunction.h"
+#include "lcd.h"
+#include "QCell.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,6 +17,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     void MainCycle();
     QCell **m_aCells;
+    Lcd* GetLcd();
     ~MainWindow();
 
 private slots:

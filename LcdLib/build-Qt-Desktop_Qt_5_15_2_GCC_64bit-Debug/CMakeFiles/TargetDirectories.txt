@@ -1,0 +1,5 @@
+/home/tns/Desktop/Lcd1602Emulator/LcdLib/build-Qt-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/edit_cache.dir
+/home/tns/Desktop/Lcd1602Emulator/LcdLib/build-Qt-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/rebuild_cache.dir
+/home/tns/Desktop/Lcd1602Emulator/LcdLib/build-Qt-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/Lcd1602Emulator.dir
+/home/tns/Desktop/Lcd1602Emulator/LcdLib/build-Qt-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/Lcd1602Emulator_autogen_timestamp_deps.dir
+/home/tns/Desktop/Lcd1602Emulator/LcdLib/build-Qt-Desktop_Qt_5_15_2_GCC_64bit-Debug/CMakeFiles/Lcd1602Emulator_autogen.dir
